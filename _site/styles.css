@@ -1,1 +1,70 @@
-/* css styles */
+/* Navbar: invisible with dark readable text */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: transparent; /* Invisible navbar */
+    box-shadow: none;
+    position: relative;
+    z-index: 10;
+}
+
+/* Navbar brand and links */
+.navbar .navbar-brand,
+.navbar .navbar-nav .nav-link {
+    color: #2E2E2E !important; /* Dark olive-black */
+    font-weight: bold;
+}
+
+/* Dropdown menu appearance */
+.dropdown-menu {
+    background-color: #F4F3EF; /* Light dropdown background */
+}
+
+.dropdown-menu .dropdown-item {
+    color: #2E2E2E !important; /* Dark text */
+    font-weight: 500;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #D9D4C5 !important; /* Soft highlight */
+    color: #2E2E2E !important;
+}
+
+/* Logo spacing */
+.logo {
+    margin-right: 40px;
+}
+
+/* Navbar link alignment */
+.navbar-links {
+    display: flex;
+    gap: 20px;
+}
+
+/* Page title styling */
+.page-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 36px;
+    margin-top: 20px;
+    margin-left: 20px;
+    color: #2E2E2E;
+}
+
+/* Full-page background gradient */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #F4F3EF 0%, #D9D4C5 50%, #8EA391 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* optional: makes it stay on scroll */
+  background-size: cover;
+  color: #3C3C3C;
+}
+
+/* Container styling */
+.container {
+    max-width: 100%;
+    width: auto;
+}

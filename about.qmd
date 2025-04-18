@@ -2,8 +2,21 @@
 title: "About"
 ---
 
-About this site
+::::: {style="display: flex; align-items: center; justify-content: center; gap: 40px; padding: 60px; flex-wrap: wrap;"}
+<!-- Left side: Image -->
 
-```{r}
-1 + 1
+::: {style="flex: 1; min-width: 300px;"}
+```         
 ```
+
+![](images/yydp.png)
+:::
+
+<!-- Right side: Text -->
+
+::: {style="flex: 1; min-width: 300px;"}
+Hi, I’m Yu Ying! I give data a voice through visuals that speak louder than numbers. With charts that tell stories and dashboards that make you look twice, visual analytics is how I turn data from “huh?” to “aha!” One graph at a time.
+
+</p>
+:::
+:::::
