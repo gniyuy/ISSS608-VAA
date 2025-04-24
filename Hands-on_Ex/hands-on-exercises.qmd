@@ -10,7 +10,7 @@ format:
 [Hands-on Exercises]{.fs-2}
 :::
 
-::::::: {.exercise-grid style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; justify-items: center; padding-top: 30px; max-width: 1200px; margin: auto;"}
+::::::::::: {.exercise-grid style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; justify-items: center; padding-top: 30px; max-width: 1200px; margin: auto;"}
 :::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
 <a href="Hands-on_Ex01/Hands-onExercise1.1.qmd" style="text-decoration: none; color: inherit;"> ![](/images/exercise-1.png){width="100%"}
 
@@ -30,4 +30,24 @@ format:
 
 </a>
 ::::
-:::::::
+
+:::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
+<a href="Hands-on_Ex03/Hands-onExercise3.1.qmd" style="text-decoration: none; color: inherit;"> ![](/images/exercise-3.1.png){width="100%"}
+
+::: {style="padding: 15px; text-align: center;"}
+**Hands-on Exercise 3.1**
+:::
+
+</a>
+::::
+
+:::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
+<a href="Hands-on_Ex03/Hands-onExercise3.2.qmd" style="text-decoration: none; color: inherit;"> ![](/images/exercise-3.png){width="100%"}
+
+::: {style="padding: 15px; text-align: center;"}
+**Hands-on Exercise 3.2**
+:::
+
+</a>
+::::
+:::::::::::
