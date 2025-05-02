@@ -1,0 +1,20 @@
+---
+format: 
+  html:
+    theme: lux
+    number-sections: true
+
+title: "Take-home Exercise 2"
+author: "Tai Yu Ying"
+date: "Apr 24 2025"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+::: text-center
+[Work in Progress]{.display-1}
+:::
