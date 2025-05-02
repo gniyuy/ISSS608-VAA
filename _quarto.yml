@@ -9,6 +9,8 @@ website:
         href: Hands-on_Ex/hands-on-exercises.qmd
       - text: "In-class Exercises"
         href: In-class_Ex/in-class-exercises.qmd
+      - text: "Take-home Exercises"
+        href: Take-home_Ex/take-home-exercises.qmd        
         
     right:
       - href: index.qmd
