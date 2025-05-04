@@ -167,10 +167,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#installing-and-loading-the-required-libraries" id="toc-installing-and-loading-the-required-libraries" class="nav-link" data-scroll-target="#installing-and-loading-the-required-libraries"><span class="header-section-number">0.2</span> Installing and Loading the Required Libraries</a></li>
   <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data"><span class="header-section-number">0.3</span> Importing Data</a></li>
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling"><span class="header-section-number">0.4</span> Data Wrangling</a></li>
-  <li><a href="#visualisation-1-population-pyramid-for-singapore-2024" id="toc-visualisation-1-population-pyramid-for-singapore-2024" class="nav-link" data-scroll-target="#visualisation-1-population-pyramid-for-singapore-2024"><span class="header-section-number">0.5</span> Visualisation 1: Population Pyramid for Singapore (2024)</a></li>
-  <li><a href="#visualisation-2-even-aged-new-towns" id="toc-visualisation-2-even-aged-new-towns" class="nav-link" data-scroll-target="#visualisation-2-even-aged-new-towns"><span class="header-section-number">0.6</span> Visualisation 2: Even-Aged New Towns</a></li>
-  <li><a href="#visualisation-3-sandwiched-generation-pressure-zones" id="toc-visualisation-3-sandwiched-generation-pressure-zones" class="nav-link" data-scroll-target="#visualisation-3-sandwiched-generation-pressure-zones"><span class="header-section-number">0.7</span> Visualisation 3: Sandwiched Generation Pressure Zones</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">0.8</span> Conclusion</a></li>
+  <li><a href="#visualisation-1-population-pyramid-for-singapore-2024" id="toc-visualisation-1-population-pyramid-for-singapore-2024" class="nav-link" data-scroll-target="#visualisation-1-population-pyramid-for-singapore-2024"><span class="header-section-number">0.5</span> Visualisation 1: Population Pyramid for Singapore, 2024</a></li>
+  <li><a href="#write-up-for-visualisation-1-population-pyramid-for-singapore-2024" id="toc-write-up-for-visualisation-1-population-pyramid-for-singapore-2024" class="nav-link" data-scroll-target="#write-up-for-visualisation-1-population-pyramid-for-singapore-2024"><span class="header-section-number">0.6</span> Write Up for Visualisation 1: Population Pyramid for Singapore, 2024</a></li>
+  <li><a href="#visualisation-2-even-aged-new-towns" id="toc-visualisation-2-even-aged-new-towns" class="nav-link" data-scroll-target="#visualisation-2-even-aged-new-towns"><span class="header-section-number">0.7</span> Visualisation 2: Even-Aged New Towns</a></li>
+  <li><a href="#write-up-for-visualisation-2-even-aged-new-towns" id="toc-write-up-for-visualisation-2-even-aged-new-towns" class="nav-link" data-scroll-target="#write-up-for-visualisation-2-even-aged-new-towns"><span class="header-section-number">0.8</span> Write Up for Visualisation 2: Even-Aged New Towns</a></li>
+  <li><a href="#visualisation-3-sandwiched-generation-pressure-zones" id="toc-visualisation-3-sandwiched-generation-pressure-zones" class="nav-link" data-scroll-target="#visualisation-3-sandwiched-generation-pressure-zones"><span class="header-section-number">0.9</span> Visualisation 3: Sandwiched Generation Pressure Zones</a></li>
+  <li><a href="#write-up-for-visualisation-3-sandwiched-generation-pressure-zones" id="toc-write-up-for-visualisation-3-sandwiched-generation-pressure-zones" class="nav-link" data-scroll-target="#write-up-for-visualisation-3-sandwiched-generation-pressure-zones"><span class="header-section-number">0.10</span> Write Up for Visualisation 3: Sandwiched Generation Pressure Zones</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">0.11</span> Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -203,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 2, 2025</p>
+      <p class="date-modified">May 5, 2025</p>
     </div>
   </div>
     
@@ -323,13 +326,11 @@ dbl (2): Pop, Time
 The original <code>Age</code> column contains the value “100+”, which must be recoded to 100 to allow numerical operations such as sorting, filtering, and aggregation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Age =</span> <span class="fu">ifelse</span>(Age <span class="sc">==</span> <span class="st">"100+"</span>, <span class="dv">100</span>, <span class="fu">as.numeric</span>(Age)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There was 1 warning in `mutate()`.
-ℹ In argument: `Age = ifelse(Age == "100+", 100, as.numeric(Age))`.
-Caused by warning in `ifelse()`:
-! NAs introduced by coercion</code></pre>
-</div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Age =</span> <span class="fu">case_when</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">==</span> <span class="st">"90_and_Over"</span> <span class="sc">~</span> <span class="st">"90"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> Age</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Age =</span> <span class="fu">as.numeric</span>(Age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="for-population-pyramid-visualisation-1" class="level4" data-number="0.4.2">
@@ -337,160 +338,178 @@ Caused by warning in `ifelse()`:
 <p><strong>Step 2: Aggregate national totals by age and sex</strong><br>
 To visualise Singapore’s population pyramid, we sum up the population across all planning areas and subzones, grouped by <code>Age</code> and <code>Sex</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_national <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Age, Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_national <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Age, Sex) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>df_national_band <span class="ot">&lt;-</span> df_national <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">AgeGroup =</span> <span class="fu">case_when</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&lt;</span> <span class="dv">10</span>              <span class="sc">~</span> <span class="st">"0-9"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">10</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">20</span>  <span class="sc">~</span> <span class="st">"10-19"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">20</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">30</span>  <span class="sc">~</span> <span class="st">"20-29"</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">30</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">40</span>  <span class="sc">~</span> <span class="st">"30-39"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">40</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">50</span>  <span class="sc">~</span> <span class="st">"40-49"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">50</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">60</span>  <span class="sc">~</span> <span class="st">"50-59"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">60</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">70</span>  <span class="sc">~</span> <span class="st">"60-69"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">70</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">80</span>  <span class="sc">~</span> <span class="st">"70-79"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;</span> <span class="dv">90</span>  <span class="sc">~</span> <span class="st">"80-89"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">90</span>             <span class="sc">~</span> <span class="st">"90 and over"</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AgeGroup, Sex) <span class="sc">%&gt;%</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">AgeGroup =</span> <span class="fu">factor</span>(AgeGroup, <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0-9"</span>, <span class="st">"10-19"</span>, <span class="st">"20-29"</span>, <span class="st">"30-39"</span>, <span class="st">"40-49"</span>, <span class="st">"50-59"</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"60-69"</span>, <span class="st">"70-79"</span>, <span class="st">"80-89"</span>, <span class="st">"90 and over"</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  )))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="for-even-aged-new-towns-visualisation-2" class="level4" data-number="0.4.3">
 <h4 data-number="0.4.3" class="anchored" data-anchor-id="for-even-aged-new-towns-visualisation-2"><span class="header-section-number">0.4.3</span> 3. For Even-Aged New Towns (Visualisation 2)</h4>
-<p><strong>Step 3: Filter for working-age group (25–45) and compute variation</strong><br>
-We assess the concentration of residents aged 25 to 45 in each planning area. A low standard deviation indicates a more uniform (even-aged) distribution.</p>
+<p><strong>Step 3: Identify even-aged towns using Top 3 Age Group Share</strong></p>
+<p>We measure the proportion of residents concentrated in the top 3 age groups within each planning area. A higher share suggests a more even-aged population profile, often seen in newer or low-density estates.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>even_age_data <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">25</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;=</span> <span class="dv">45</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, Age) <span class="sc">%&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA) <span class="sc">%&gt;%</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">SD =</span> <span class="fu">sd</span>(Pop)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(SD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute top 3 age group share for each Planning Area</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>top3_share <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, Age) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span>  <span class="co"># Sum population by Planning Area and Age</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_pa =</span> <span class="fu">sum</span>(total)) <span class="sc">%&gt;%</span>                  <span class="co"># Calculate total population per planning area</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(PA, <span class="fu">desc</span>(total)) <span class="sc">%&gt;%</span>                       <span class="co"># Sort age groups by population within each PA</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%&gt;%</span>                                      <span class="co"># Select the top 3 most populous age groups</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">top3_share =</span> <span class="fu">sum</span>(total) <span class="sc">/</span> <span class="fu">first</span>(total_pa)) <span class="sc">%&gt;%</span>  <span class="co"># Compute their share of total PA population</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(top3_share)) <span class="sc">%&gt;%</span>                      <span class="co"># Rank planning areas by this share</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">15</span>)                                  <span class="co"># Keep the top 15 most even-aged towns</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the data</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>top3_table <span class="ot">&lt;-</span> top3_share <span class="sc">%&gt;%</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">row_number</span>(),</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">pct_label =</span> <span class="fu">paste0</span>(<span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, top3_share <span class="sc">*</span> <span class="dv">100</span>), <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="for-sandwiched-generation-pressure-zones-visualisation-3" class="level4" data-number="0.4.4">
 <h4 data-number="0.4.4" class="anchored" data-anchor-id="for-sandwiched-generation-pressure-zones-visualisation-3"><span class="header-section-number">0.4.4</span> 4. For Sandwiched Generation Pressure Zones (Visualisation 3)</h4>
-<p><strong>Step 4: Prepare planning area-level age distribution</strong><br>
-We group by planning area, age, and sex to create a baseline population profile for each area. This step enables the creation of structured age bands by location.</p>
+<p><strong>Step 4: Identify high-pressure planning areas for the sandwiched generation</strong></p>
+<p>We calculate the combined population share of children (aged 0–14) and elderly (aged 65 and above) in each planning area. These two groups typically require caregiving support, and a higher combined share suggests a greater likelihood of caregiving burden on the working-age population (the so-called “sandwiched generation”). This step helps identify areas with the greatest dual caregiving pressures, which are useful for informing policy on eldercare, childcare, and caregiver support infrastructure. The results are visualised using dot plots for clearer comparison across the top 10 pressure zones.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>planning_data <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, Age, Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><strong>Step 5: Calculate total population per planning area</strong><br>
-This is needed to later compute the proportion of children and elderly per planning area.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>total_by_pa <span class="ot">&lt;-</span> planning_data <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><strong>Step 6: Classify population into Children, Working-Age, and Elderly</strong><br>
-We assign age groups based on standard dependency brackets: Children (0–14), Elderly (65+), and Working-Age (15–64).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data_agegroup <span class="ot">&lt;-</span> planning_data <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">AgeGroup =</span> <span class="fu">case_when</span>(</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&lt;=</span> <span class="dv">14</span> <span class="sc">~</span> <span class="st">"Children"</span>,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    Age <span class="sc">&gt;=</span> <span class="dv">65</span> <span class="sc">~</span> <span class="st">"Elderly"</span>,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Working-Age"</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, AgeGroup) <span class="sc">%&gt;%</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(total_by_pa, <span class="at">by =</span> <span class="st">"PA"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prop =</span> Pop <span class="sc">/</span> Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><strong>Step 7: Pivot data for comparison</strong><br>
-We reshape the data to wide format so that each planning area has columns for each age group proportion. This facilitates calculating pressure ratios.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sandwiched_data <span class="ot">&lt;-</span> data_agegroup <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PA, AgeGroup, Prop) <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> AgeGroup, <span class="at">values_from =</span> Prop)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>even_age_data <span class="ot">&lt;-</span> planning_data <span class="sc">%&gt;%</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">25</span> <span class="sc">&amp;</span> Age <span class="sc">&lt;=</span> <span class="dv">45</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, Age) <span class="sc">%&gt;%</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA) <span class="sc">%&gt;%</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">SD =</span> <span class="fu">sd</span>(Pop)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(SD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create new column to label children and elderly</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pressure_data <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_group =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Age)),       <span class="co"># Convert age to numeric for comparison</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">category =</span> <span class="fu">case_when</span>(                            <span class="co"># Categorise into Child, Elderly, or Other</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      age_group <span class="sc">&lt;=</span> <span class="dv">14</span> <span class="sc">~</span> <span class="st">"Child"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      age_group <span class="sc">&gt;=</span> <span class="dv">65</span> <span class="sc">~</span> <span class="st">"Elderly"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, category) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Pop =</span> <span class="fu">sum</span>(Pop), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span>    <span class="co"># Total population by planning area and age category</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> category, </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> Pop, </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span>                                  <span class="co"># Fill missing values with 0</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Total =</span> Child <span class="sc">+</span> Elderly <span class="sc">+</span> Other,                 <span class="co"># Calculate total population in each planning area</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">combined_share =</span> (Child <span class="sc">+</span> Elderly) <span class="sc">/</span> Total       <span class="co"># Compute combined share of children and elderly</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PA, combined_share) <span class="sc">%&gt;%</span>                     <span class="co"># Keep only relevant columns</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(combined_share)) <span class="sc">%&gt;%</span>                  <span class="co"># Rank by highest pressure (combined share)</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)                                 <span class="co"># Select top 10 pressure zones</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="visualisation-1-population-pyramid-for-singapore-2024" class="level3" data-number="0.5">
-<h3 data-number="0.5" class="anchored" data-anchor-id="visualisation-1-population-pyramid-for-singapore-2024"><span class="header-section-number">0.5</span> Visualisation 1: Population Pyramid for Singapore (2024)</h3>
+<h3 data-number="0.5" class="anchored" data-anchor-id="visualisation-1-population-pyramid-for-singapore-2024"><span class="header-section-number">0.5</span> Visualisation 1: Population Pyramid for Singapore, 2024</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare pyramid data</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df_pyramid <span class="ot">&lt;-</span> df_national <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pop =</span> <span class="fu">ifelse</span>(Sex <span class="sc">==</span> <span class="st">"Males"</span>, <span class="sc">-</span>Pop, Pop))</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_pyramid, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> Pop, <span class="at">fill =</span> Sex)) <span class="sc">+</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">width =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> abs, <span class="at">name =</span> <span class="st">"Population"</span>) <span class="sc">+</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Population Pyramid of Singapore, 2024"</span>, <span class="at">x =</span> <span class="st">"Age"</span>) <span class="sc">+</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#6497b1"</span>, <span class="st">"#ff9999"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
-(`geom_bar()`).</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_national_band, <span class="fu">aes</span>(<span class="at">x =</span> AgeGroup, <span class="at">y =</span> Pop, <span class="at">fill =</span> Sex)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Females"</span> <span class="ot">=</span> <span class="st">"#ff9999"</span>, <span class="st">"Males"</span> <span class="ot">=</span> <span class="st">"#6497b1"</span>)) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>()) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Population Pyramid of Singapore, 2024"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Age Group"</span>, <span class="at">y =</span> <span class="st">"Population"</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-homeExercise1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-homeExercise1_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><strong>Write-up (Visualisation 1):</strong><br>
-The population pyramid for Singapore in 2024 reveals a relatively even distribution among the working-age population, with noticeable tapering at both ends. The pyramid shows a broader base among those aged 30–45, reflecting the BTO baby boom. A gender imbalance becomes prominent from age 70 onward, with females outnumbering males — a typical pattern due to longevity differences. This visual underscores the dual challenge of a shrinking youth population and a growing elderly cohort.</p>
+</section>
+<section id="write-up-for-visualisation-1-population-pyramid-for-singapore-2024" class="level3" data-number="0.6">
+<h3 data-number="0.6" class="anchored" data-anchor-id="write-up-for-visualisation-1-population-pyramid-for-singapore-2024"><span class="header-section-number">0.6</span> Write Up for Visualisation 1: Population Pyramid for Singapore, 2024</h3>
+<p>In 2024, Singapore’s demographic structure reflects a mature population with significant policy implications. The population pyramid reveals a bulge in the working-age groups (30–59), indicating a strong but aging workforce. Youth segments (0–19) are relatively smaller, pointing to declining birth rate. A trend that aligns with national concerns over fertility and population replacement. The elderly population (aged 70 and above) is growing, driven by longer life expectancies and the aging of the baby boomer cohort. This shift intensifies pressure on healthcare infrastructure, eldercare services, and CPF retirement adequacy. Current policies such as the Action Plan for Successful Ageing and enhancements to pro-family schemes aim to address these demographic challenges. With a shrinking base of younger citizens, Singapore is also recalibrating immigration strategies and upskilling efforts to maintain economic competitiveness. The demographic distribution in 2024 thus reinforces the urgency of forward-looking social and economic planning to adapt to a rapidly greying society.</p>
 <hr>
 </section>
-<section id="visualisation-2-even-aged-new-towns" class="level3" data-number="0.6">
-<h3 data-number="0.6" class="anchored" data-anchor-id="visualisation-2-even-aged-new-towns"><span class="header-section-number">0.6</span> Visualisation 2: Even-Aged New Towns</h3>
+<section id="visualisation-2-even-aged-new-towns" class="level3" data-number="0.7">
+<h3 data-number="0.7" class="anchored" data-anchor-id="visualisation-2-even-aged-new-towns"><span class="header-section-number">0.7</span> Visualisation 2: Even-Aged New Towns</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select top 10 towns with lowest SD</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>even_age_data_top <span class="ot">&lt;-</span> even_age_data <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(SD, <span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(even_age_data_top, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(PA, SD), <span class="at">y =</span> SD)) <span class="sc">+</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Even-Aged New Towns (Ages 25–45)"</span>,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Planning Area"</span>, <span class="at">y =</span> <span class="st">"Standard Deviation of Population (25–45)"</span>) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(top3_table, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">"Top 3 Age Group Share"</span>, <span class="at">y =</span> <span class="fu">reorder</span>(PA, <span class="sc">-</span>top3_share))) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> top3_share), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> pct_label), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">4.5</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"#d9f0d3"</span>, <span class="at">high =</span> <span class="st">"#00441b"</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Top 15 Even-Aged New Towns"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Ranking table with conditional formatting"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-homeExercise1_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-homeExercise1_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><strong>Write-up (Visualisation 2):</strong><br>
-This visualisation ranks Singapore’s planning areas by the uniformity of their 25–45 age group populations. Newer estates like Punggol and Sengkang exhibit low standard deviation, indicating a concentrated cluster of residents in their late 20s to 40s — the result of batch BTO rollouts over the past decade. These “even-aged” new towns suggest planned demographic engineering, but also raise questions about future ageing synchrony in these towns.</p>
+</section>
+<section id="write-up-for-visualisation-2-even-aged-new-towns" class="level3" data-number="0.8">
+<h3 data-number="0.8" class="anchored" data-anchor-id="write-up-for-visualisation-2-even-aged-new-towns"><span class="header-section-number">0.8</span> Write Up for Visualisation 2: Even-Aged New Towns</h3>
+<p>In 2024, Singapore’s demographic distribution highlights sharp age concentration in several planning areas with small or transitional populations. Topping the list is Seletar, which exhibits the most even-aged structure likely a reflection of its limited residential base and new, clustered private housing developments. Other top-ranking areas like Museum, Western Water Catchment, and Southern Islands have similarly low and niche populations, often dominated by specific age groups due to institutional or non-residential land use. Tengah, a newly launched HDB town, features prominently as a youthful, family-oriented area shaped by Build-to-Order (BTO) launches, while Punggol continues its trend as a hub for young families. These demographic pockets point to planning areas with either a very small population or targeted residential growth. Recognizing such age clusters is crucial for anticipating demand in childcare, schooling, and youth-centric services, and for ensuring that infrastructure investments match population composition in evolving districts.</p>
 <hr>
 </section>
-<section id="visualisation-3-sandwiched-generation-pressure-zones" class="level3" data-number="0.7">
-<h3 data-number="0.7" class="anchored" data-anchor-id="visualisation-3-sandwiched-generation-pressure-zones"><span class="header-section-number">0.7</span> Visualisation 3: Sandwiched Generation Pressure Zones</h3>
+<section id="visualisation-3-sandwiched-generation-pressure-zones" class="level3" data-number="0.9">
+<h3 data-number="0.9" class="anchored" data-anchor-id="visualisation-3-sandwiched-generation-pressure-zones"><span class="header-section-number">0.9</span> Visualisation 3: Sandwiched Generation Pressure Zones</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select top towns with high children + elderly share</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sandwiched_plot <span class="ot">&lt;-</span> sandwiched_data <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Combined =</span> Children <span class="sc">+</span> Elderly) <span class="sc">%&gt;%</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Combined)) <span class="sc">%&gt;%</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(Combined, <span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sandwiched_plot, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(PA, Combined), <span class="at">y =</span> Combined)) <span class="sc">+</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"darkorange"</span>) <span class="sc">+</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Pressure Zones for Sandwiched Generation"</span>,</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Planning Area"</span>, <span class="at">y =</span> <span class="st">"Combined Share of Children and Elderly"</span>) <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pressure_data, <span class="fu">aes</span>(<span class="at">x =</span> combined_share, <span class="at">y =</span> <span class="fu">reorder</span>(PA, combined_share))) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"darkorange"</span>) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(combined_share, <span class="at">accuracy =</span> <span class="dv">1</span>)), </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">3.5</span>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Top 10 Pressure Zones for Sandwiched Generation"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Combined share of children (0–14) and elderly (65+)"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Combined Share"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Planning Area"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="dv">1</span>),</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>))) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-homeExercise1_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-homeExercise1_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><strong>Write-up (Visualisation 3):</strong><br>
-This chart identifies the top 10 planning areas with the highest combined proportion of children (0–14) and seniors (65+), indicating zones with heavy caregiving demands. Places like Yishun and Woodlands top the list, suggesting families here are likely balancing childcare and eldercare. These pressure zones underscore the importance of localized infrastructure like childcare, eldercare, and caregiver support services.</p>
 </section>
-<section id="conclusion" class="level3" data-number="0.8">
-<h3 data-number="0.8" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">0.8</span> Conclusion</h3>
-<p>This take-home exercise demonstrates how publicly available demographic data can be transformed into meaningful insights through thoughtful wrangling and visual storytelling. By employing tidyverse-based data processing and ggplot2 visualisations, we highlighted Singapore’s evolving population structure in 2024.</p>
-<p>The population pyramid provided a macro view of national age and gender distribution. The analysis of even-aged new towns revealed spatial demographic uniformity in younger estates, which may face synchronous ageing in the future. Lastly, the identification of sandwiched generation pressure zones spotlighted towns where the burden of dual caregiving is highest — a critical consideration for policy planners.</p>
-<p>Together, these three visualisations offer complementary perspectives on Singapore’s demographic challenges and opportunities. This analytical framework can support deeper exploration of urban planning, healthcare allocation, and intergenerational policy design.</p>
+<section id="write-up-for-visualisation-3-sandwiched-generation-pressure-zones" class="level3" data-number="0.10">
+<h3 data-number="0.10" class="anchored" data-anchor-id="write-up-for-visualisation-3-sandwiched-generation-pressure-zones"><span class="header-section-number">0.10</span> Write Up for Visualisation 3: Sandwiched Generation Pressure Zones</h3>
+<p>In 2024, Singapore’s demographic data reveals mounting pressures on the sandwiched generation. Those caring for both children and elderly parents. Planning areas like Outram, Ang Mo Kio, and Bukit Merah rank highest in combined shares of young (0–14) and elderly (65+) residents. These mature estates often house multigenerational families, leading to dual caregiving responsibilities. This aligns with national concerns over ageing and low fertility, and highlights the need for targeted support. Recent initiatives, such as the Caregivers Support Action Plan and enhancements to eldercare and childcare schemes, aim to ease these burdens. As household structures evolve, planning for childcare services, eldercare facilities, and flexible work arrangements will become increasingly important in these pressure zones. Recognising where these dual demands are most concentrated helps policymakers deliver timely, place-based interventions. The data offers a snapshot of where intergenerational stress is most acute and where support systems must be strengthened to ensure family resilience.</p>
+</section>
+<section id="conclusion" class="level3" data-number="0.11">
+<h3 data-number="0.11" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">0.11</span> Conclusion</h3>
+<p>The population pyramid of Singapore in 2024 reveals a broad-based working-age demographic concentrated between ages 30 and 59, reflecting the maturing profile of a developed nation. However, visualisations on spatial distribution highlight distinct patterns. The <em>Top 15 Even-Aged New Towns</em> analysis shows areas like Seletar, Museum, and Tengah with highly concentrated age groups likely driven by new housing projects or limited residential diversity. In contrast, the <em>Top 10 Pressure Zones for the Sandwiched Generation</em> including Outram, Bukit Merah, and Ang Mo Kio which exhibit high combined shares of children and elderly. These mature estates place greater caregiving pressure on the working-age population. Together, the analyses underscore a dual planning challenge: supporting young, demographically uniform towns with services for growing families, while reinforcing caregiving infrastructure in ageing districts. Tailored interventions across planning areas are essential for sustaining Singapore’s long-term social resilience in the face of evolving age dynamics.</p>
 
 
 </section>
