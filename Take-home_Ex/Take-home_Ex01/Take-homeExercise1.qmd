@@ -28,7 +28,7 @@ These visualisations highlight national age structure, uniform age distribution 
 ### Installing and Loading the Required Libraries
 
 | **Library** | **Purpose** |
-|----|----|
+|------------------------------------|------------------------------------|
 | `tidyverse` | Core data wrangling and manipulation (includes `dplyr`, `readr`, `tidyr`, etc.). Used for filtering, grouping, summarising, and joining datasets. |
 | `ggplot2` | Main plotting package for creating all data visualisations with a consistent grammar of graphics. |
 | `ggthemes` | Provides additional clean and publication-ready themes for `ggplot2`. Enhances visual appeal of charts. |
@@ -69,7 +69,11 @@ The original `Age` column contains the value "100+", which must be recoded to 10
 
 ```{r}
 df <- df %>%
-  mutate(Age = ifelse(Age == "100+", 100, as.numeric(Age)))
+  mutate(Age = case_when(
+    Age == "90_and_Over" ~ "90",
+    TRUE ~ Age
+  ),
+  Age = as.numeric(Age))
 ```
 
 #### 2. For Population Pyramid (Visualisation 1)
@@ -81,143 +85,156 @@ To visualise Singapore's population pyramid, we sum up the population across all
 df_national <- df %>%
   group_by(Age, Sex) %>%
   summarise(Pop = sum(Pop), .groups = "drop")
+
+df_national_band <- df_national %>%
+  mutate(AgeGroup = case_when(
+    Age < 10              ~ "0-9",
+    Age >= 10 & Age < 20  ~ "10-19",
+    Age >= 20 & Age < 30  ~ "20-29",
+    Age >= 30 & Age < 40  ~ "30-39",
+    Age >= 40 & Age < 50  ~ "40-49",
+    Age >= 50 & Age < 60  ~ "50-59",
+    Age >= 60 & Age < 70  ~ "60-69",
+    Age >= 70 & Age < 80  ~ "70-79",
+    Age >= 80 & Age < 90  ~ "80-89",
+    Age >= 90             ~ "90 and over"
+  )) %>%
+  group_by(AgeGroup, Sex) %>%
+  summarise(Pop = sum(Pop), .groups = "drop") %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c(
+    "0-9", "10-19", "20-29", "30-39", "40-49", "50-59",
+    "60-69", "70-79", "80-89", "90 and over"
+  )))
 ```
 
 #### 3. For Even-Aged New Towns (Visualisation 2)
 
-**Step 3: Filter for working-age group (25–45) and compute variation**\
-We assess the concentration of residents aged 25 to 45 in each planning area. A low standard deviation indicates a more uniform (even-aged) distribution.
+**Step 3: Identify even-aged towns using Top 3 Age Group Share**
+
+We measure the proportion of residents concentrated in the top 3 age groups within each planning area. A higher share suggests a more even-aged population profile, often seen in newer or low-density estates.
 
 ```{r}
-even_age_data <- df %>%
-  filter(Age >= 25 & Age <= 45) %>%
+# Compute top 3 age group share for each Planning Area
+top3_share <- df %>%
   group_by(PA, Age) %>%
-  summarise(Pop = sum(Pop), .groups = "drop") %>%
+  summarise(total = sum(Pop), .groups = "drop") %>%  # Sum population by Planning Area and Age
   group_by(PA) %>%
-  summarise(SD = sd(Pop)) %>%
-  arrange(SD)
+  mutate(total_pa = sum(total)) %>%                  # Calculate total population per planning area
+  arrange(PA, desc(total)) %>%                       # Sort age groups by population within each PA
+  group_by(PA) %>%
+  slice(1:3) %>%                                      # Select the top 3 most populous age groups
+  summarise(top3_share = sum(total) / first(total_pa)) %>%  # Compute their share of total PA population
+  arrange(desc(top3_share)) %>%                      # Rank planning areas by this share
+  slice_head(n = 15)                                  # Keep the top 15 most even-aged towns
+
+# Prepare the data
+top3_table <- top3_share %>%
+  mutate(rank = row_number(),
+         pct_label = paste0(sprintf("%.1f", top3_share * 100), "%"))
 ```
 
 #### 4. For Sandwiched Generation Pressure Zones (Visualisation 3)
 
-**Step 4: Prepare planning area-level age distribution**\
-We group by planning area, age, and sex to create a baseline population profile for each area. This step enables the creation of structured age bands by location.
+**Step 4: Identify high-pressure planning areas for the sandwiched generation**
+
+We calculate the combined population share of children (aged 0–14) and elderly (aged 65 and above) in each planning area. These two groups typically require caregiving support, and a higher combined share suggests a greater likelihood of caregiving burden on the working-age population (the so-called "sandwiched generation"). This step helps identify areas with the greatest dual caregiving pressures, which are useful for informing policy on eldercare, childcare, and caregiver support infrastructure. The results are visualised using dot plots for clearer comparison across the top 10 pressure zones.
 
 ```{r}
-planning_data <- df %>%
-  group_by(PA, Age, Sex) %>%
-  summarise(Pop = sum(Pop), .groups = "drop")
+# Create new column to label children and elderly
+pressure_data <- df %>%
+  mutate(
+    age_group = as.numeric(as.character(Age)),       # Convert age to numeric for comparison
+    category = case_when(                            # Categorise into Child, Elderly, or Other
+      age_group <= 14 ~ "Child",
+      age_group >= 65 ~ "Elderly",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  group_by(PA, category) %>%
+  summarise(Pop = sum(Pop), .groups = "drop") %>%    # Total population by planning area and age category
+  tidyr::pivot_wider(
+    names_from = category, 
+    values_from = Pop, 
+    values_fill = 0                                  # Fill missing values with 0
+  ) %>%
+  mutate(
+    Total = Child + Elderly + Other,                 # Calculate total population in each planning area
+    combined_share = (Child + Elderly) / Total       # Compute combined share of children and elderly
+  ) %>%
+  select(PA, combined_share) %>%                     # Keep only relevant columns
+  arrange(desc(combined_share)) %>%                  # Rank by highest pressure (combined share)
+  slice_head(n = 10)                                 # Select top 10 pressure zones
 ```
 
-**Step 5: Calculate total population per planning area**\
-This is needed to later compute the proportion of children and elderly per planning area.
+### Visualisation 1: Population Pyramid for Singapore, 2024
 
 ```{r}
-total_by_pa <- planning_data %>%
-  group_by(PA) %>%
-  summarise(Total = sum(Pop), .groups = "drop")
+ggplot(df_national_band, aes(x = AgeGroup, y = Pop, fill = Sex)) +
+  geom_col(position = position_dodge(width = 0.9), width = 0.8, colour = "white") +
+  scale_fill_manual(values = c("Females" = "#ff9999", "Males" = "#6497b1")) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(title = "Population Pyramid of Singapore, 2024",
+       x = "Age Group", y = "Population") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
 ```
 
-**Step 6: Classify population into Children, Working-Age, and Elderly**\
-We assign age groups based on standard dependency brackets: Children (0–14), Elderly (65+), and Working-Age (15–64).
+### Write Up for Visualisation 1: Population Pyramid for Singapore, 2024
 
-```{r}
-data_agegroup <- planning_data %>%
-  mutate(AgeGroup = case_when(
-    Age <= 14 ~ "Children",
-    Age >= 65 ~ "Elderly",
-    TRUE ~ "Working-Age"
-  )) %>%
-  group_by(PA, AgeGroup) %>%
-  summarise(Pop = sum(Pop), .groups = "drop") %>%
-  left_join(total_by_pa, by = "PA") %>%
-  mutate(Prop = Pop / Total)
-```
-
-**Step 7: Pivot data for comparison**\
-We reshape the data to wide format so that each planning area has columns for each age group proportion. This facilitates calculating pressure ratios.
-
-```{r}
-sandwiched_data <- data_agegroup %>%
-  select(PA, AgeGroup, Prop) %>%
-  pivot_wider(names_from = AgeGroup, values_from = Prop)
-
-even_age_data <- planning_data %>%
-  filter(Age >= 25 & Age <= 45) %>%
-  group_by(PA, Age) %>%
-  summarise(Pop = sum(Pop), .groups = "drop") %>%
-  group_by(PA) %>%
-  summarise(SD = sd(Pop)) %>%
-  arrange(SD)
-```
-
-### Visualisation 1: Population Pyramid for Singapore (2024)
-
-```{r}
-# Prepare pyramid data
-df_pyramid <- df_national %>%
-  mutate(Pop = ifelse(Sex == "Males", -Pop, Pop))
-
-# Plot
-ggplot(df_pyramid, aes(x = Age, y = Pop, fill = Sex)) +
-  geom_bar(stat = "identity", width = 1) +
-  scale_y_continuous(labels = abs, name = "Population") +
-  labs(title = "Population Pyramid of Singapore, 2024", x = "Age") +
-  theme_minimal() +
-  scale_fill_manual(values = c("#6497b1", "#ff9999"))
-```
-
-**Write-up (Visualisation 1):**\
-The population pyramid for Singapore in 2024 reveals a relatively even distribution among the working-age population, with noticeable tapering at both ends. The pyramid shows a broader base among those aged 30–45, reflecting the BTO baby boom. A gender imbalance becomes prominent from age 70 onward, with females outnumbering males — a typical pattern due to longevity differences. This visual underscores the dual challenge of a shrinking youth population and a growing elderly cohort.
+In 2024, Singapore’s demographic structure reflects a mature population with significant policy implications. The population pyramid reveals a bulge in the working-age groups (30–59), indicating a strong but aging workforce. Youth segments (0–19) are relatively smaller, pointing to declining birth rate. A trend that aligns with national concerns over fertility and population replacement. The elderly population (aged 70 and above) is growing, driven by longer life expectancies and the aging of the baby boomer cohort. This shift intensifies pressure on healthcare infrastructure, eldercare services, and CPF retirement adequacy. Current policies such as the Action Plan for Successful Ageing and enhancements to pro-family schemes aim to address these demographic challenges. With a shrinking base of younger citizens, Singapore is also recalibrating immigration strategies and upskilling efforts to maintain economic competitiveness. The demographic distribution in 2024 thus reinforces the urgency of forward-looking social and economic planning to adapt to a rapidly greying society.
 
 ------------------------------------------------------------------------
 
 ### Visualisation 2: Even-Aged New Towns
 
 ```{r}
-# Select top 10 towns with lowest SD
-even_age_data_top <- even_age_data %>%
-  slice_min(SD, n = 10)
-
-# Plot
-ggplot(even_age_data_top, aes(x = fct_reorder(PA, SD), y = SD)) +
-  geom_col(fill = "steelblue") +
-  coord_flip() +
-  labs(title = "Top 10 Even-Aged New Towns (Ages 25–45)",
-       x = "Planning Area", y = "Standard Deviation of Population (25–45)") +
-  theme_minimal()
+ggplot(top3_table, aes(x = "Top 3 Age Group Share", y = reorder(PA, -top3_share))) +
+  geom_tile(aes(fill = top3_share), color = "white", width = 1, height = 0.9) +
+  geom_text(aes(label = pct_label), color = "white", size = 4.5) +
+  scale_fill_gradient(low = "#d9f0d3", high = "#00441b") +
+  labs(
+    title = "Top 15 Even-Aged New Towns",
+    subtitle = "Ranking table with conditional formatting",
+    x = NULL, y = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    axis.text.y = element_text(size = 12),
+    plot.title = element_text(face = "bold")
+  )
 ```
 
-**Write-up (Visualisation 2):**\
-This visualisation ranks Singapore’s planning areas by the uniformity of their 25–45 age group populations. Newer estates like Punggol and Sengkang exhibit low standard deviation, indicating a concentrated cluster of residents in their late 20s to 40s — the result of batch BTO rollouts over the past decade. These “even-aged” new towns suggest planned demographic engineering, but also raise questions about future ageing synchrony in these towns.
+### Write Up for Visualisation 2: Even-Aged New Towns
+
+In 2024, Singapore’s demographic distribution highlights sharp age concentration in several planning areas with small or transitional populations. Topping the list is Seletar, which exhibits the most even-aged structure likely a reflection of its limited residential base and new, clustered private housing developments. Other top-ranking areas like Museum, Western Water Catchment, and Southern Islands have similarly low and niche populations, often dominated by specific age groups due to institutional or non-residential land use. Tengah, a newly launched HDB town, features prominently as a youthful, family-oriented area shaped by Build-to-Order (BTO) launches, while Punggol continues its trend as a hub for young families. These demographic pockets point to planning areas with either a very small population or targeted residential growth. Recognizing such age clusters is crucial for anticipating demand in childcare, schooling, and youth-centric services, and for ensuring that infrastructure investments match population composition in evolving districts.
 
 ------------------------------------------------------------------------
 
 ### Visualisation 3: Sandwiched Generation Pressure Zones
 
 ```{r}
-# Select top towns with high children + elderly share
-sandwiched_plot <- sandwiched_data %>%
-  mutate(Combined = Children + Elderly) %>%
-  arrange(desc(Combined)) %>%
-  slice_max(Combined, n = 10)
-
-# Plot
-ggplot(sandwiched_plot, aes(x = fct_reorder(PA, Combined), y = Combined)) +
-  geom_col(fill = "darkorange") +
-  coord_flip() +
-  labs(title = "Top 10 Pressure Zones for Sandwiched Generation",
-       x = "Planning Area", y = "Combined Share of Children and Elderly") +
-  theme_minimal()
+ggplot(pressure_data, aes(x = combined_share, y = reorder(PA, combined_share))) +
+  geom_point(size = 4, color = "darkorange") +
+  geom_text(aes(label = scales::percent(combined_share, accuracy = 1)), 
+            hjust = -0.3, size = 3.5) +
+  labs(
+    title = "Top 10 Pressure Zones for Sandwiched Generation",
+    subtitle = "Combined share of children (0–14) and elderly (65+)",
+    x = "Combined Share",
+    y = "Planning Area"
+  ) +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1),
+                     expand = expansion(mult = c(0, 0.15))) +
+  theme_minimal(base_size = 13)
 ```
 
-**Write-up (Visualisation 3):**\
-This chart identifies the top 10 planning areas with the highest combined proportion of children (0–14) and seniors (65+), indicating zones with heavy caregiving demands. Places like Yishun and Woodlands top the list, suggesting families here are likely balancing childcare and eldercare. These pressure zones underscore the importance of localized infrastructure like childcare, eldercare, and caregiver support services.
+### Write Up for Visualisation 3: Sandwiched Generation Pressure Zones
+
+In 2024, Singapore’s demographic data reveals mounting pressures on the sandwiched generation. Those caring for both children and elderly parents. Planning areas like Outram, Ang Mo Kio, and Bukit Merah rank highest in combined shares of young (0–14) and elderly (65+) residents. These mature estates often house multigenerational families, leading to dual caregiving responsibilities. This aligns with national concerns over ageing and low fertility, and highlights the need for targeted support. Recent initiatives, such as the Caregivers Support Action Plan and enhancements to eldercare and childcare schemes, aim to ease these burdens. As household structures evolve, planning for childcare services, eldercare facilities, and flexible work arrangements will become increasingly important in these pressure zones. Recognising where these dual demands are most concentrated helps policymakers deliver timely, place-based interventions. The data offers a snapshot of where intergenerational stress is most acute and where support systems must be strengthened to ensure family resilience.
 
 ### Conclusion
 
-This take-home exercise demonstrates how publicly available demographic data can be transformed into meaningful insights through thoughtful wrangling and visual storytelling. By employing tidyverse-based data processing and ggplot2 visualisations, we highlighted Singapore’s evolving population structure in 2024.
-
-The population pyramid provided a macro view of national age and gender distribution. The analysis of even-aged new towns revealed spatial demographic uniformity in younger estates, which may face synchronous ageing in the future. Lastly, the identification of sandwiched generation pressure zones spotlighted towns where the burden of dual caregiving is highest — a critical consideration for policy planners.
-
-Together, these three visualisations offer complementary perspectives on Singapore’s demographic challenges and opportunities. This analytical framework can support deeper exploration of urban planning, healthcare allocation, and intergenerational policy design.
+The population pyramid of Singapore in 2024 reveals a broad-based working-age demographic concentrated between ages 30 and 59, reflecting the maturing profile of a developed nation. However, visualisations on spatial distribution highlight distinct patterns. The *Top 15 Even-Aged New Towns* analysis shows areas like Seletar, Museum, and Tengah with highly concentrated age groups likely driven by new housing projects or limited residential diversity. In contrast, the *Top 10 Pressure Zones for the Sandwiched Generation* including Outram, Bukit Merah, and Ang Mo Kio which exhibit high combined shares of children and elderly. These mature estates place greater caregiving pressure on the working-age population. Together, the analyses underscore a dual planning challenge: supporting young, demographically uniform towns with services for growing families, while reinforcing caregiving infrastructure in ageing districts. Tailored interventions across planning areas are essential for sustaining Singapore’s long-term social resilience in the face of evolving age dynamics.
