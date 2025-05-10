@@ -4,7 +4,7 @@ format:
     theme: lux
     number-sections: true
 
-title: "Take-home Exercise 1"
+title: "Take-home Exercise 1.1"
 author: "Tai Yu Ying"
 date: "Apr 24 2025"
 date-modified: "last-modified"

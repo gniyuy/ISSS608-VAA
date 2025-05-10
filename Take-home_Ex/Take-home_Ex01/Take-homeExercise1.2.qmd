@@ -1,0 +1,415 @@
+---
+format: 
+  html:
+    theme: lux
+    number-sections: true
+
+title: "Take-home Exercise 1.2"
+author: "Tai Yu Ying"
+date: "Apr 24 2025"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+## Introduction
+
+This report evaluates a peer-produced visualisation that illustrates the youth demographic structure of Singapore in 2024. The original chart, titled *"Top 15 Planning Areas by Population Count"*, was designed to support a public-facing article for a digital media platform. These charts aimed to segment demographic insights clearly by age band.
+
+### Original Visualisations
+
+The charts below illustrate the original submission:
+
+-   **Youth (0–24 years)**
+
+```{r}
+#| echo: false
+library(tidyverse)
+df <- read_csv("data/respopagesex2024.csv")
+
+df <- df %>%
+  mutate(Age = as.integer(Age)) %>%  # Convert to numeric (100+ becomes NA)
+  drop_na(Age)                       # Remove missing values caused by conversion
+
+df <- df %>%
+  mutate(AgeBand = cut(Age,
+    breaks = c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55,
+               60, 65, 70, 75, 80, 85, 90, 95, 100, Inf),
+    labels = c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29",
+               "30-34", "35-39", "40-44", "45-49", "50-54",
+               "55-59", "60-64", "65-69", "70-74", "75-79",
+               "80-84", "85-89", "90-94", "95-99", "100+"),
+    right = FALSE))
+
+# For population pyramid (Age-Sex)
+pyramid_data <- df %>%
+  group_by(Age, Sex) %>%
+  summarise(Pop = sum(Pop), .groups = "drop")
+
+# For top 5 planning areas
+top5_pa <- df %>%
+  group_by(PA) %>%
+  summarise(Pop = sum(Pop), .groups = "drop") %>%
+  slice_max(order_by = Pop, n = 5)
+
+df <- df %>%
+  mutate(
+    PA = str_trim(str_to_upper(PA)),
+    Region = case_when(
+      PA %in% c("BISHAN", "BUKIT MERAH", "BUKIT TIMAH", "CENTRAL AREA", "DOWNTOWN CORE",
+                "GEYLANG", "KALLANG", "MARINA EAST", "MARINA SOUTH", "MUSEUM", "NEWTON",
+                "NOVENA", "ORCHARD", "OUTRAM", "PAYA LEBAR", "QUEENSTOWN", "RIVER VALLEY",
+                "ROCHOR", "SINGAPORE RIVER", "SOUTHERN ISLANDS", "STRAITS VIEW", "TANGLIN",
+                "TOA PAYOH", "MARINE PARADE") ~ "Central",
+      PA %in% c("BEDOK", "CHANGI", "CHANGI BAY", "PASIR RIS", "TAMPINES") ~ "East",
+      PA %in% c("CENTRAL WATER CATCHMENT", "MANDAI", "SEMBABWANG", "SIMPANG",
+                "SUNGEI KADUT", "WOODLANDS", "YISHUN", "SEMBAWANG") ~ "North",
+      PA %in% c("ANG MO KIO", "HOUGANG", "NORTH-EASTERN ISLANDS", "PUNGGOL",
+                "SELETAR", "SENGKANG", "SERANGOON") ~ "North-East",
+      PA %in% c("BOON LAY", "BUKIT BATOK", "BUKIT PANJANG", "CHOA CHU KANG",
+                "CLEMENTI", "JURONG EAST", "JURONG WEST", "LIM CHU KANG",
+                "PIONEER", "TENGAH", "TUAS", "WESTERN ISLANDS",
+                "WESTERN WATER CATCHMENT") ~ "West",
+      TRUE ~ NA_character_
+    )
+  )
+
+df_median <- df %>%
+  arrange(Age) %>%
+  mutate(
+    cum_pop = cumsum(Pop),
+    total_pop = sum(Pop)
+  ) %>%
+  filter(cum_pop >= total_pop / 2) %>%
+  slice(1)
+
+median_age <- df_median$Age
+
+df <- df %>%
+  mutate(
+    GenerationBand = case_when(
+      Age <= 24 ~ "Alpha & Gen Z (0–24)",
+      Age <= 34 ~ "Young Adults (25–34)",
+      Age <= 54 ~ "Working Adults (35–54)",
+      Age <= 64 ~ "Silver Generation (55–64)",
+      Age <= 74 ~ "Merdeka Generation (65–74)",
+      TRUE ~ "Pioneer Generation (75+)"
+    ),
+    GenerationBand = factor(GenerationBand, levels = c(
+      "Alpha & Gen Z (0–24)", "Young Adults (25–34)", "Working Adults (35–54)",
+      "Silver Generation (55–64)", "Merdeka Generation (65–74)", "Pioneer Generation (75+)"
+    ))
+  )
+
+df_summary <- df %>%
+  group_by(Region, PA, AgeBand, Sex) %>%
+  summarise(Total = sum(Pop), .groups = "drop")
+
+# Prepare data: Total population aged 25–54 per Planning Area
+df_ywa_total <- df %>%
+  filter(Age >= 0, Age <= 24, !is.na(PA)) %>%
+  group_by(PA) %>%
+  summarise(Pop_25_54 = sum(Pop), .groups = "drop")
+
+# Get total population per PA
+df_total_pa <- df %>%
+  filter(!is.na(PA)) %>%
+  group_by(PA) %>%
+  summarise(TotalPop = sum(Pop), .groups = "drop")
+
+# Join and compute percentage
+df_ywa_total <- df_ywa_total %>%
+  left_join(df_total_pa, by = "PA") %>%
+  mutate(
+    Perc = Pop_25_54 / TotalPop * 100
+  ) %>%
+  arrange(desc(Pop_25_54)) %>%
+  slice(1:15) %>%
+  mutate(PA = factor(PA, levels = rev(PA)))  # Reverse order for plotting
+
+# Plot
+ggplot(df_ywa_total, aes(x = PA, y = Pop_25_54)) +
+  geom_bar(stat = "identity", fill = "#7AC3B0", color = "grey40", width = 0.7) +
+  
+  # Percentage outside the bar
+  geom_text(aes(label = paste0(round(Perc, 1), "%")), 
+            hjust = -0.1, size = 3.2, color = "black") +
+  
+  # Raw count inside the bar
+  geom_text(aes(label = scales::comma(Pop_25_54)),
+            hjust = 1.05, size = 3.1, color = "white") +
+  
+  labs(
+    title = "Top 15 Planning Areas by Population Count Aged 0–54",
+    subtitle = "Bars show absolute population; percentages indicate share of the PA's total residents",
+    x = NULL, y = "Population"
+  ) +
+  scale_y_continuous(
+    limits = c(0, 130000),
+    breaks = seq(0, 130000, by = 20000),
+    labels = scales::comma
+  ) +
+  coord_flip() +
+  theme_minimal(base_size = 11)
+```
+
+-   **Adults (25–54 years)**
+
+```{r}
+#| echo: false
+# Prepare data: Total population aged 25–54 per Planning Area
+df_ywa_total <- df %>%
+  filter(Age >= 25, Age <= 54, !is.na(PA)) %>%
+  group_by(PA) %>%
+  summarise(Pop_25_54 = sum(Pop), .groups = "drop")
+
+# Get total population per PA
+df_total_pa <- df %>%
+  filter(!is.na(PA)) %>%
+  group_by(PA) %>%
+  summarise(TotalPop = sum(Pop), .groups = "drop")
+
+# Join and compute percentage
+df_ywa_total <- df_ywa_total %>%
+  left_join(df_total_pa, by = "PA") %>%
+  mutate(
+    Perc = Pop_25_54 / TotalPop * 100
+  ) %>%
+  arrange(desc(Pop_25_54)) %>%
+  slice(1:15) %>%
+  mutate(PA = factor(PA, levels = rev(PA)))  # Reverse order for plotting
+
+# Plot
+ggplot(df_ywa_total, aes(x = PA, y = Pop_25_54)) +
+  geom_bar(stat = "identity", fill = "#bcaef5", color = "grey40", width = 0.7) +
+  
+  # Percentage outside the bar
+  geom_text(aes(label = paste0(round(Perc, 1), "%")), 
+            hjust = -0.1, size = 3.2, color = "black") +
+  
+  # Raw count inside the bar
+  geom_text(aes(label = scales::comma(Pop_25_54)),
+            hjust = 1.05, size = 3.1, color = "white") +
+  
+  labs(
+    title = "Top 15 Planning Areas by Population Count Aged 25–54",
+    subtitle = "With population count and percent proportion of that PA",
+    x = NULL, y = "Population"
+  ) +
+  scale_y_continuous(
+    limits = c(0, 130000),
+    breaks = seq(0, 130000, by = 20000),
+    labels = scales::comma
+  ) +
+  coord_flip() +
+  theme_minimal(base_size = 11)
+```
+
+-   **Seniors (55 years and above)**
+
+```{r}
+#| echo: false
+# Prepare data: Total population aged 25–54 per Planning Area
+df_ywa_total <- df %>%
+  filter(Age >= 55, !is.na(PA)) %>%
+  group_by(PA) %>%
+  summarise(Pop_25_54 = sum(Pop), .groups = "drop")
+
+# Get total population per PA
+df_total_pa <- df %>%
+  filter(!is.na(PA)) %>%
+  group_by(PA) %>%
+  summarise(TotalPop = sum(Pop), .groups = "drop")
+
+# Join and compute percentage
+df_ywa_total <- df_ywa_total %>%
+  left_join(df_total_pa, by = "PA") %>%
+  mutate(
+    Perc = Pop_25_54 / TotalPop * 100
+  ) %>%
+  arrange(desc(Pop_25_54)) %>%
+  slice(1:15) %>%
+  mutate(PA = factor(PA, levels = rev(PA)))  # Reverse order for plotting
+
+# Plot
+ggplot(df_ywa_total, aes(x = PA, y = Pop_25_54)) +
+  geom_bar(stat = "identity", fill = "#D9968C", color = "grey40", width = 0.7) +
+  
+  # Percentage outside the bar
+  geom_text(aes(label = paste0(round(Perc, 1), "%")), 
+            hjust = -0.1, size = 3.2, color = "black") +
+  
+  # Raw count inside the bar
+  geom_text(aes(label = scales::comma(Pop_25_54)),
+            hjust = 1.05, size = 3.1, color = "white") +
+  
+  labs(
+    title = "Top 15 Planning Areas by Population Count Aged 25–54",
+    subtitle = "With population count and percent proportion of that PA",
+    x = NULL, y = "Population"
+  ) +
+  scale_y_continuous(
+    limits = c(0, 130000),
+    breaks = seq(0, 130000, by = 20000),
+    labels = scales::comma
+  ) +
+  coord_flip() +
+  theme_minimal(base_size = 11)
+```
+
+Each chart shows the top 15 planning areas by population count for the respective age group, with percentages indicating the age group’s share of each area's population.
+
+While the visualisations were neatly structured, they were fragmented and repetitive. This analysis proposes a consolidated makeover visualisation that enhances interpretability and supports direct comparisons across age groups.
+
+Using the Magic Quadrat framework (truthfulness, functionality, beauty, and insightfulness), this analysis proposes a consolidated makeover visualisation that enhances interpretability and supports direct comparisons across age groups.
+
+## Critique of Original Visualisation
+
+### Good Design Principles
+
+1.  **Clear Age Group Segmentation:**\
+    The decision to separate the population into distinct age bands (youths (0–24), adults (25–54), and seniors (55+)) aligns well with demographic conventions and enhances interpretability for a non-technical audience. This categorical breakdown makes it easier to communicate policy-relevant patterns tied to different life stages.
+
+2.  **Contextual Enrichment Through Percentages:**\
+    Beyond raw population counts, the inclusion of percentage share annotations for each age group within its respective planning area provides important proportional context. This allows the audience to assess not only absolute size but also demographic concentration, adding interpretive richness.
+
+3.  **Consistent Ranking Within Groups:**\
+    Sorting planning areas by descending population size for each age group helps establish a clear hierarchy and supports quick visual scanning. This consistent layout facilitates within-group comparisons and draws attention to dominant regions in each demographic.
+
+### Areas for Improvement
+
+1.  **Lack of Cross-Age Comparison (Siloed Insight):**\
+    By separating each age group into its own chart, the original design obstructs any holistic understanding of age distribution across planning areas. It becomes impossible to identify whether certain areas consistently rank high across all age segments or whether others are skewed toward one demographic. This fragmentation limits interpretive depth and prevents strategic insight.
+
+2.  **Visual Redundancy and Inefficiency:**\
+    The repetition of axes, legends, titles, and tick marks across three nearly identical plots wastes valuable visual space. Moreover, these duplicated design elements create a false sense of separation among age groups, even though they share a common comparative context, the planning area. This violates the principle of visual economy, where each chart element should add unique value.
+
+3.  **Flat Aesthetic Encoding (No Functional Colour Logic):**\
+    Although the charts use color, it is non-informative. Each plot uses a single arbitrary color not tied to a specific dimension (e.g. age group). This not only reduces the chart’s ability to guide attention but also misses the opportunity to use color to encode demographic segmentation. The result is a neutral visual experience that fails to direct the reader toward meaningful patterns or anomalies — such as age dominance or underrepresentation in particular locations.
+
+## Installing and Loading Required Libraries
+
+Before loading the libraries, the table below outlines their purpose in this analysis:
+
+| Library | Purpose |
+|------------------------|-----------------------------------------------|
+| **tidyverse** | Core package for data wrangling (dplyr), data import (readr), and plotting (ggplot2). |
+| **ggthemes** | Provides additional minimalist and publication-ready themes for ggplot2. |
+| **scales** | Enhances axis formatting, particularly for percentages and large numbers. |
+| **patchwork** | Allows combining multiple ggplot2 plots into one cohesive layout. |
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(scales)
+library(patchwork)
+```
+
+## Importing and Exploring the Data
+
+```{r}
+df <- read_csv("data/respopagesex2024.csv")
+df <- df %>% mutate(Age = as.numeric(Age))
+head(df)
+```
+
+## Data Wrangling
+
+```{r}
+# Define age groups
+processed_df <- df %>%
+  mutate(
+    AgeGroup = case_when(
+      Age <= 24 ~ "0–24",
+      Age <= 54 ~ "25–54",
+      TRUE ~ "55+"
+    )
+  )
+
+# Summarise population by Planning Area and Age Group
+demo_summary <- processed_df %>%
+  group_by(PA, AgeGroup) %>%
+  summarise(GroupPop = sum(Pop), .groups = 'drop')
+
+# Compute total population per PA
+total_pop <- df %>%
+  group_by(PA) %>%
+  summarise(TotalPop = sum(Pop), .groups = 'drop')
+
+# Merge and compute percentage share
+demo_summary <- demo_summary %>%
+  left_join(total_pop, by = "PA") %>%
+  mutate(PctShare = (GroupPop / TotalPop) * 100)
+```
+
+## Makeover Version of the Visualisation
+
+*Note: The data was processed entirely using the `tidyverse` family of packages (including `dplyr`, `readr`, and `ggplot2`), which ensures consistent syntax, tidy data principles, and reproducibility. The visualisation was constructed exclusively using `ggplot2`, fulfilling the requirement to use appropriate tidyverse packages and ggplot2 extensions.*
+
+### Rationale for Makeover
+
+The original submission clearly highlighted the top planning areas for each age group independently. To maintain that clarity while achieving consolidation, a faceted dot plot is used. This visualisation retains the individual top 15 planning areas per age group and arranges them into aligned facets. This allows viewers to assess each age segment’s spatial distribution and make side-by-side comparisons without losing age-specific granularity.
+
+```{r}
+#| eval: false
+# Filter top 15 Planning Areas by Age Group
+top15_by_agegroup <- demo_summary %>%
+  group_by(AgeGroup) %>%
+  slice_max(GroupPop, n = 15) %>%
+  ungroup()
+
+# Create faceted dot plot visualisation with data labels
+
+
+makeover_plot <- ggplot(top15_by_agegroup, aes(x = GroupPop, y = reorder(PA, GroupPop))) +
+  geom_point(aes(color = AgeGroup), size = 4) +
+  geom_text(
+    aes(label = paste0(format(GroupPop, big.mark = ","), " (", round(PctShare, 1), "%)")),
+    hjust = -0.1, size = 3
+  ) +
+  facet_wrap(~ AgeGroup, scales = "free_y") +
+  scale_color_brewer(palette = "Set2") +
+  xlim(30000, 150000) +
+  labs(
+    title = "Top 15 Planning Areas by Population in Each Age Group",
+    x = "Population Count",
+    y = "Planning Area",
+    color = "Age Group"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    plot.margin = margin(10, 60, 10, 10)
+  )
+
+makeover_plot
+```
+
+::: callout-tip
+**Note:** If the chart appears cut off or compressed, right-click and select “Open image in new tab” to view it in full size. The display may be constrained by site rendering settings.
+:::
+
+![](images/clipboard-3176659652.png){width="100%"}
+
+## Why the Makeover is Better Than the Original
+
+The original submission consisted of three separate bar charts, each dedicated to one age group: youths (0–24), adults (25–54), and seniors (55+). While this layout offered clear within-group rankings, it hindered cross-group comparisons and resulted in redundant visual elements.
+
+By contrast, the revised makeover consolidates the charts into a **single faceted dot plot**, providing a compact and coherent comparative view. The visualisation retains the original objective — showing the top 15 planning areas by age group — but enhances it with aligned facets, shared scales, and consistent visual encoding.
+
+| **Aspect** | **Original (3 Separate Bar Charts)** | **Makeover (Faceted Dot Plot)** |
+|------------------------|------------------------|------------------------|
+| **Comparability Across Age Groups** | Limited — viewers must switch between charts | Easy — all age groups aligned side by side |
+| **Visual Clarity** | Redundant axes and repeated design elements | Minimalist and unified layout, using consistent color, structure, and alignment |
+| **Insightfulness** | Focused only on intra-group ranking | Reveals overlaps and skews in age composition across PAs |
+| **Efficiency of Space** | Uses more screen real estate, visual clutter | Compact horizontal layout with faceting |
+| **Cognitive Load** | Higher — memory and attention are required to compare charts | Lower — comparisons across age groups are immediate |
+| **Label Design** | Dense with bar values, sometimes overlapping | Data labels appear cleanly beside each dot, showing both counts and percentages |
+| **Color Use** | Uniform and uninformative | Color encodes age group meaningfully, aiding group distinction |
+
+## Conclusion
+
+The original submission offered a clean breakdown by age, but its tripartite structure obscured intergroup comparisons. The revised grouped bar chart improves on this by presenting all age bands in a single, cohesive visualisation. It supports multi-dimensional analysis, encourages comparative thinking, and remains accessible to a lay audience—meeting both communication and analytical goals for public-facing storytelling.
