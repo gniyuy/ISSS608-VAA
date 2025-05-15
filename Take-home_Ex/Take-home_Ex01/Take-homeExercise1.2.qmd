@@ -19,6 +19,8 @@ execute:
 
 This report evaluates a peer-produced visualisation that illustrates the youth demographic structure of Singapore in 2024. The original chart, titled *"Top 15 Planning Areas by Population Count"*, was designed to support a public-facing article for a digital media platform. These charts aimed to segment demographic insights clearly by age band.
 
+[Link to peer submission](https://isss608-davidchiam.netlify.app/take-home_ex/take-home_ex01/take-home_ex01)
+
 ### Original Visualisations
 
 The charts below illustrate the original submission:
@@ -295,7 +297,7 @@ Using the Magic Quadrat framework (truthfulness, functionality, beauty, and insi
 Before loading the libraries, the table below outlines their purpose in this analysis:
 
 | Library | Purpose |
-|------------------------|-----------------------------------------------|
+|-------------------------|-----------------------------------------------|
 | **tidyverse** | Core package for data wrangling (dplyr), data import (readr), and plotting (ggplot2). |
 | **ggthemes** | Provides additional minimalist and publication-ready themes for ggplot2. |
 | **scales** | Enhances axis formatting, particularly for percentages and large numbers. |
