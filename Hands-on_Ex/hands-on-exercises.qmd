@@ -102,40 +102,40 @@ format:
 ::::
 
 :::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
-<a href="Hands-on_Ex05/Hands-onExercise5.2.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+<a href="Hands-on_Ex06/Hands-onExercise6.1.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
 
 ::: {style="padding: 15px; text-align: center;"}
-**Hands-on Exercise 5.2**
+**Hands-on Exercise 6.1**
 :::
 
 </a>
 ::::
 
 :::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
-<a href="Hands-on_Ex05/Hands-onExercise5.3.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+<a href="Hands-on_Ex08/Hands-onExercise8.1.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
 
 ::: {style="padding: 15px; text-align: center;"}
-**Hands-on Exercise 5.3**
+**Hands-on Exercise 8.1**
 :::
 
 </a>
 ::::
 
 :::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
-<a href="Hands-on_Ex05/Hands-onExercise5.4.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+<a href="Hands-on_Ex08/Hands-onExercise8.2.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
 
 ::: {style="padding: 15px; text-align: center;"}
-**Hands-on Exercise 5.4**
+**Hands-on Exercise 8.2**
 :::
 
 </a>
 ::::
 
 :::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
-<a href="Hands-on_Ex05/Hands-onExercise5.5.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+<a href="Hands-on_Ex08/Hands-onExercise8.3.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
 
 ::: {style="padding: 15px; text-align: center;"}
-**Hands-on Exercise 5.5**
+**Hands-on Exercise 8.3**
 :::
 
 </a>
