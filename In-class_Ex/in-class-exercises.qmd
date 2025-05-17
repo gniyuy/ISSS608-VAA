@@ -1,0 +1,53 @@
+---
+page-layout: full
+format:
+  html:
+    theme: styles.css
+    css: styles.css
+---
+
+::: text-center
+[In-class Exercises]{.fs-2}
+:::
+
+::::::::::: {.exercise-grid style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; justify-items: center; padding-top: 30px; max-width: 1200px; margin: auto;"}
+:::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
+<a href="In-class_Ex05/In-classExercise5.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+
+::: {style="padding: 15px; text-align: center;"}
+**In-class Exercise 5**
+:::
+
+</a>
+::::
+
+:::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
+<a href="In-class_Ex06/In-classExercise6.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+
+::: {style="padding: 15px; text-align: center;"}
+**In-class Exercise 6**
+:::
+
+</a>
+::::
+
+:::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
+<a href="In-class_Ex07/In-classExercise7.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+
+::: {style="padding: 15px; text-align: center;"}
+**In-class Exercise 7**
+:::
+
+</a>
+::::
+
+:::: {.card style="width: 260px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;"}
+<a href="In-class_Ex08/In-classExercise8.qmd" style="text-decoration: none; color: inherit;"> ![](/images/icon.jpg)
+
+::: {style="padding: 15px; text-align: center;"}
+**In-class Exercise 8**
+:::
+
+</a>
+::::
+:::::::::::
