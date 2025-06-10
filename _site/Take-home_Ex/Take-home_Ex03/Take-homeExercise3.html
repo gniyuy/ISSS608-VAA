@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -124,11 +158,31 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview"><span class="header-section-number">1</span> 📘 Project Overview</a></li>
+  <li><a href="#application-architecture" id="toc-application-architecture" class="nav-link" data-scroll-target="#application-architecture"><span class="header-section-number">2</span> 🌐 Application Architecture</a></li>
+  <li><a href="#r-packages-used" id="toc-r-packages-used" class="nav-link" data-scroll-target="#r-packages-used"><span class="header-section-number">3</span> 📦 R Packages Used</a></li>
+  <li><a href="#key-ui-components-parameters" id="toc-key-ui-components-parameters" class="nav-link" data-scroll-target="#key-ui-components-parameters"><span class="header-section-number">4</span> 🧪 Key UI Components &amp; Parameters</a></li>
+  <li><a href="#ui-sketch" id="toc-ui-sketch" class="nav-link" data-scroll-target="#ui-sketch"><span class="header-section-number">5</span> 🖼️ UI Sketch</a></li>
+  <li><a href="#ui-design-principles" id="toc-ui-design-principles" class="nav-link" data-scroll-target="#ui-design-principles"><span class="header-section-number">6</span> 🖌️ UI Design Principles</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="header-section-number">7</span> 🧵 Data Preparation</a></li>
+  <li><a href="#visualisation-design-rationale" id="toc-visualisation-design-rationale" class="nav-link" data-scroll-target="#visualisation-design-rationale"><span class="header-section-number">8</span> 📊 Visualisation Design Rationale</a></li>
+  <li><a href="#code-snippet-examples-tested" id="toc-code-snippet-examples-tested" class="nav-link" data-scroll-target="#code-snippet-examples-tested"><span class="header-section-number">9</span> 🔧 Code Snippet Examples (Tested)</a>
+  <ul class="collapse">
+  <li><a href="#timeline-chart" id="toc-timeline-chart" class="nav-link" data-scroll-target="#timeline-chart"><span class="header-section-number">9.1</span> 📈 Timeline Chart</a></li>
+  <li><a href="#collaboration-network" id="toc-collaboration-network" class="nav-link" data-scroll-target="#collaboration-network"><span class="header-section-number">9.2</span> 🌐 Collaboration Network</a></li>
+  <li><a href="#heat-map" id="toc-heat-map" class="nav-link" data-scroll-target="#heat-map"><span class="header-section-number">9.3</span> 📊 Heat map</a></li>
+  </ul></li>
+  <li><a href="#outcome" id="toc-outcome" class="nav-link" data-scroll-target="#outcome"><span class="header-section-number">10</span> ✅ Outcome</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -137,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta column-page-left">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -156,7 +210,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 2, 2025</p>
+      <p class="date-modified">June 11, 2025</p>
     </div>
   </div>
     
@@ -167,11 +221,362 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="text-center">
-<p><span class="display-1">Work in Progress</span></p>
+<section id="project-overview" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 📘 Project Overview</h1>
+<p>This report presents a prototype of a <strong>Story Mode Shiny application</strong> designed to explore the rise of Oceanus Folk music through the lens of Sailor Shift’s career. Instead of relying on traditional multi-tab navigation, the app adopts a <strong>scrolling linear structure</strong> that simulates a feature article—perfect for the app’s core user: journalist <strong>Silas Reed</strong>.</p>
+<p>The application is divided into <strong>six narrative sections</strong>, integrating interactive components that allow exploration of musical influence, career timelines, genre evolution, artist comparisons, and predictions.</p>
+</section>
+<section id="application-architecture" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> 🌐 Application Architecture</h1>
+<p>The application follows a <strong>narrative scroll-based UI</strong> using <code>shiny::fluidPage()</code> sections, <code>shinyjs::toggle()</code> for transitions, and optionally, <code>shiny.router</code> or <code>shiny.fluent</code> for modular routing.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Title</th>
+<th>Role in Narrative</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Intro</td>
+<td>Sailor’s Origin</td>
+<td>Sets the context: Oceanus Folk roots and Sailor’s beginnings</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Timeline of a Superstar</td>
+<td>Career trajectory, Ivy Echoes, and major solo milestones</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Collaboration Web</td>
+<td>Interactive influence graph: Sailor’s musical network</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Echoes Across Genres</td>
+<td>How Oceanus Folk spread and transformed post-Sailor</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Artist DNA Lab</td>
+<td>Compare rising stars and Sailor’s growth profile</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Forecasting the Future</td>
+<td>Predicting next-generation Oceanus Folk stars</td>
+</tr>
+</tbody>
+</table>
+<p>Navigation is controlled via scroll or <strong>“Up</strong> ↑<strong>” “Down ↓” buttons</strong> between sections.</p>
+</section>
+<section id="r-packages-used" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> 📦 R Packages Used</h1>
+<p>All R packages used were validated to be available on CRAN.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>shiny</code></td>
+<td>UI framework</td>
+</tr>
+<tr class="even">
+<td><code>shinyjs</code></td>
+<td>Show/hide sections dynamically</td>
+</tr>
+<tr class="odd">
+<td><code>plotly</code></td>
+<td>Timeline charts, radar charts, area plots</td>
+</tr>
+<tr class="even">
+<td><code>visNetwork</code></td>
+<td>Influence/collaboration networks</td>
+</tr>
+<tr class="odd">
+<td><code>dplyr</code>, <code>tidyr</code></td>
+<td>Data wrangling and reshaping</td>
+</tr>
+<tr class="even">
+<td><code>fmsb</code></td>
+<td>Radar charts for artist comparison</td>
+</tr>
+<tr class="odd">
+<td><code>ggplot2</code></td>
+<td>Area charts for genre spread</td>
+</tr>
+<tr class="even">
+<td><code>DT</code></td>
+<td>Collaborator data table</td>
+</tr>
+<tr class="odd">
+<td><code>lubridate</code></td>
+<td>Date handling for timelines</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="key-ui-components-parameters" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 🧪 Key UI Components &amp; Parameters</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Input / Output</th>
+<th>Component Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>selectInput("artist")</code></td>
+<td>Artist selector</td>
+<td>Choose Sailor or her bandmates</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>plotlyOutput("timeline")</code></td>
+<td>Career timeline</td>
+<td>Plots albums, viral hits, and key events</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>visNetworkOutput("collab")</code></td>
+<td>Influence network</td>
+<td>Visualize direct/indirect collaborations</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>sliderInput("depth")</code></td>
+<td>Network depth</td>
+<td>Choose 1–3 hops of influence</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>plotOutput("genreArea")</code></td>
+<td>Genre spread area plot</td>
+<td>Shows Oceanus Folk’s rising influence</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>renderPlot("chord")</code></td>
+<td>Genre-to-genre flow</td>
+<td>Chord diagram: inspiration ↔︎ influence</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>pickerInput("compareArtists")</code></td>
+<td>Compare up to 3</td>
+<td>Choose artists to compare growth trajectories</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>plotlyOutput("radar")</code></td>
+<td>Radar chart</td>
+<td>Traits: collabs, reach, output, genre diversity</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>tableOutput("prediction")</code></td>
+<td>Prediction engine</td>
+<td>Forecast 3 next stars + reasoning</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ui-sketch" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 🖼️ UI Sketch</h1>
+<p><a href="UI Design (Sketch and Layout).pdf">View the full UI Design (Sketch and Layout) (PDF)</a></p>
+</section>
+<section id="ui-design-principles" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 🖌️ UI Design Principles</h1>
+<ul>
+<li><p><strong>Narrative Layout</strong>: Scrollable single-page interface with linear section transitions</p></li>
+<li><p><strong>Minimalist Styling</strong>: Flat layout with Oceanus-inspired colors (e.g., teal, midnight blue)</p></li>
+<li><p><strong>Consistent Filters</strong>: Artist and year range selectors persist throughout</p></li>
+<li><p><strong>Interactive Focus</strong>: Users can click, hover, and explore without needing to “navigate”</p></li>
+</ul>
+</section>
+<section id="data-preparation" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> 🧵 Data Preparation</h1>
+<ul>
+<li><p><strong>Entities</strong>: Artists, genres, albums, songs, record labels</p></li>
+<li><p><strong>Relationships</strong>: Influences, collaborations, genre alignment</p></li>
+<li><p><strong>Derived Fields</strong>:</p>
+<ul>
+<li><p>Influence score by artist (based on degree centrality)</p></li>
+<li><p>Genre evolution index (Oceanus Folk % over time)</p></li>
+<li><p>Artist trait matrix: collaborations, output, genre reach</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="visualisation-design-rationale" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> 📊 Visualisation Design Rationale</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Visualization</th>
+<th>Used For</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Timeline Chart</td>
+<td>Career progression</td>
+<td>Shows how Sailor evolved, contextualized over time</td>
+</tr>
+<tr class="even">
+<td>visNetwork Graph</td>
+<td>Collaboration &amp; influence networks</td>
+<td>Visualizes both direct and indirect musical links</td>
+</tr>
+<tr class="odd">
+<td>Heat map</td>
+<td>Genre rise and fall</td>
+<td>Emphasizes Oceanus Folk’s global impact over time</td>
+</tr>
+<tr class="even">
+<td>Radar Chart</td>
+<td>Artist comparison</td>
+<td>Profile rising stars using multiple metrics</td>
+</tr>
+<tr class="odd">
+<td>Table</td>
+<td>Predictions with justification</td>
+<td>Shows forecasted next stars in an easy-to-digest format</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="code-snippet-examples-tested" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> 🔧 Code Snippet Examples (Tested)</h1>
+<section id="timeline-chart" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="timeline-chart"><span class="header-section-number">9.1</span> 📈 Timeline Chart</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(notoriety_by_decade, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(notoriety_decade), <span class="at">y =</span> n, <span class="at">group =</span> genre)) <span class="sc">+</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> genre, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Cycle Plot: Notable Genres by Decade (Top 5 Genres)"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Decade"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Notable Songs"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
+<p><img src="images/clipboard-185450506.png" class="img-fluid"></p>
+</section>
+<section id="collaboration-network" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="collaboration-network"><span class="header-section-number">9.2</span> 🌐 Collaboration Network</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to create visNetwork graph for a given artist</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>create_artist_graph <span class="ot">&lt;-</span> <span class="cf">function</span>(artist_name) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get artist node ID</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  artist_node <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(name <span class="sc">==</span> artist_name <span class="sc">|</span> stage_name <span class="sc">==</span> artist_name)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(artist_node) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="fu">paste</span>(<span class="st">"Artist"</span>, artist_name, <span class="st">"not found in nodes."</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  artist_id <span class="ot">&lt;-</span> artist_node<span class="sc">$</span>id[<span class="dv">1</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get all edges connected to artist (source or target)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  connected_edges <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(source <span class="sc">==</span> artist_id <span class="sc">|</span> target <span class="sc">==</span> artist_id)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get all unique node IDs involved in those edges</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  related_ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(connected_edges<span class="sc">$</span>source, connected_edges<span class="sc">$</span>target))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter nodes and edges</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  filtered_nodes <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(id <span class="sc">%in%</span> related_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">label =</span> name,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>           <span class="at">group =</span> node_type,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"&lt;b&gt;"</span>, name, <span class="st">"&lt;/b&gt;&lt;br&gt;"</span>, node_type),</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>           <span class="at">id =</span> <span class="fu">as.character</span>(id)) <span class="co"># Ensure ID is character</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  filtered_edges <span class="ot">&lt;-</span> connected_edges <span class="sc">%&gt;%</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">from =</span> <span class="fu">as.character</span>(source),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>           <span class="at">to =</span> <span class="fu">as.character</span>(target),</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> edge_type,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>           <span class="at">arrows =</span> <span class="st">"to"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(from, to, label, arrows)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create visNetwork graph</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visNetwork</span>(filtered_nodes, filtered_edges, <span class="at">height =</span> <span class="st">"600px"</span>, <span class="at">width =</span> <span class="st">"100%"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visEdges</span>(<span class="at">smooth =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visOptions</span>(<span class="at">highlightNearest =</span> <span class="cn">TRUE</span>, <span class="at">nodesIdSelection =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visLegend</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visLayout</span>(<span class="at">randomSeed =</span> <span class="dv">123</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visPhysics</span>(<span class="at">stabilization =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visExport</span>()</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><img src="images/clipboard-3756393520.png" class="img-fluid"></p>
+</section>
+<section id="heat-map" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="heat-map"><span class="header-section-number">9.3</span> 📊 Heat map</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(genre_notoriety_heatmap, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(notoriety_decade), <span class="at">y =</span> <span class="fu">fct_rev</span>(genre), <span class="at">fill =</span> n)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"lightyellow"</span>, <span class="at">high =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Heatmap of Notable Songs by Genre and Decade"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Notoriety Decade"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Genre"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Song Count"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><img src="images/clipboard-1942541118.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="outcome" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> ✅ Outcome</h1>
+<p>This Story Mode Shiny prototype offers a narrative-first interface that aligns with the needs of a journalist user. Instead of separating tasks rigidly, it tells a coherent story about:</p>
+<ul>
+<li><p>The evolution of Sailor Shift and her collaborators</p></li>
+<li><p>The transformation and global impact of Oceanus Folk</p></li>
+<li><p>The defining traits of rising stars and what comes next</p></li>
+</ul>
+<p>By structuring the dashboard as a <strong>scrollable data story</strong>, the app goes beyond analysis to become an engaging editorial companion.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
